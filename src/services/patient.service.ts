@@ -14,6 +14,16 @@ const fetchAllPatients = (): PatientNoSensitiveFields[] => {
   }));
 };
 
+const fetchPatient = (id: string): Patient => {
+  const patient = patients.find((p) => p.id === id);
+
+  if (!patient) {
+    throw new Error(`Patient with ID ${id} not found`);
+  }
+
+  return patient;
+};
+
 const addPatient = (data: NewPatient): Patient => {
   // Create new patient object
   const newPatient: Patient = {
@@ -27,4 +37,4 @@ const addPatient = (data: NewPatient): Patient => {
   return newPatient;
 };
 
-export default { fetchAllPatients, addPatient };
+export default { fetchAllPatients, fetchPatient, addPatient };
