@@ -1,8 +1,7 @@
 import express from "express";
-
 import patientService from "../services/patient.service";
-
 import toNewPatient from "../utils/toNewPatient.util";
+import toNewEntry from "../utils/toNewEntry.util";
 
 const router = express.Router();
 
@@ -38,6 +37,28 @@ router.post("/", (req, res) => {
     const newPatientResult = patientService.addPatient(newPatient);
 
     res.status(201).json(newPatientResult);
+  } catch (err: unknown) {
+    let errMsg = "Something went wrong.";
+
+    if (err instanceof Error) {
+      errMsg = `${errMsg} Error: ${err.message}`;
+    }
+
+    res.status(400).json({ error: errMsg });
+  }
+});
+
+router.post("/:id/entries", (req, res) => {
+  const { id: patientId } = req.params;
+
+  try {
+    // Ensure request body conforms to NewEntry type
+    const newEntry = toNewEntry(req.body);
+
+    // Create new entry in data store
+    const newEntryResult = patientService.addEntry(patientId, newEntry);
+
+    res.status(201).json(newEntryResult);
   } catch (err: unknown) {
     let errMsg = "Something went wrong.";
 
